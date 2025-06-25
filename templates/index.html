@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GOAT League Schedule Generator</title>
+</head>
+<body>
+  <h1>GOAT League Matchup Generator</h1>
+  <form action="/" method="post" enctype="multipart/form-data">
+    <label for="numPlayers">Number of players:</label>
+    <select name="numPlayers" required>
+      <option value="12">12</option>
+      <option value="16">16</option>
+      <option value="20">20</option>
+    </select><br><br>
+
+    <label for="useWeights">Use Weighted Score?</label>
+    <select name="useWeights" required>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select><br><br>
+
+    <label for="playerList">Upload Excel File:</label>
+    <input type="file" name="playerList" accept=".xlsx" required><br><br>
+
+    <input type="submit" value="Generate Schedule">
+  </form>
+</body>
+</html>
