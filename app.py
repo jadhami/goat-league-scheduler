@@ -35,7 +35,7 @@ def generate_schedule(players, scores, rounds=10):
                     team2[0] not in used and team2[1] not in used and
                     team1[1] not in played_with[team1[0]] and
                     team2[1] not in played_with[team2[0]] and
-                    all(played_against[p1][p2] < 2 for p1 in team1 for p2 in team2)):
+                    all(played_against[p1][p2] < 3 for p1 in team1 for p2 in team2)):
 
                     score = abs((scores[team1[0]] + scores[team1[1]]) / 2 -
                                 (scores[team2[0]] + scores[team2[1]]) / 2)
