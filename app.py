@@ -9,6 +9,7 @@ import os
 
 app = Flask(__name__)
 
+rounds = int(request.form.get('rounds', 8))  # default to 8 if not provided
 def generate_schedule(players, scores, rounds=rounds):
     played_with = defaultdict(set)
     played_against = defaultdict(lambda: defaultdict(int))
