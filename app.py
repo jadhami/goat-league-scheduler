@@ -15,7 +15,7 @@ def generate_schedule(players, scores, rounds=10):
     schedule = []
 
     attempts = 0
-    max_attempts = 5000
+    max_attempts = 20000  # increased from 5000 to allow more scheduling attempts
 
     while len(schedule) < rounds and attempts < max_attempts:
         attempts += 1
