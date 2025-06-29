@@ -9,7 +9,7 @@ import os
 
 app = Flask(__name__)
 
-def generate_schedule(players, scores, rounds=8):
+def generate_schedule(players, scores, rounds=rounds):
     played_with = defaultdict(set)
     played_against = defaultdict(lambda: defaultdict(int))
     schedule = []
