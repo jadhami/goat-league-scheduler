@@ -9,8 +9,7 @@ import os
 
 app = Flask(__name__)
 
-def rounds = int(request.form.get('rounds', 10))
-    generate_schedule(players, scores, rounds):
+def generate_schedule(players, scores, rounds=10):
     played_with = defaultdict(set)
     played_against = defaultdict(lambda: defaultdict(int))
     schedule = []
@@ -112,7 +111,8 @@ def index():
         scores = {name: float(df.loc[df['Player'] == name, 'Weighted Score']) if use_weighted else 0 for name in players}
         player_numbers = {name: i+1 for i, name in enumerate(players)}
 
-        schedule = generate_schedule(players, scores)
+        rounds = int(request.form.get('rounds', 10))
+        schedule = generate_schedule(players, scores, rounds)
         pdf_path = create_pdf(schedule, player_numbers)
         return send_file(pdf_path, as_attachment=True)
 
