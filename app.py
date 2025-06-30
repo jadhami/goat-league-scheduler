@@ -109,9 +109,12 @@ def index():
         df = df.sort_values(by="Weighted Score", ascending=False).head(num_players).reset_index(drop=True)
         players = df['Player'].tolist()
         scores = {name: float(df.loc[df['Player'] == name, 'Weighted Score']) if use_weighted else 0 for name in players}
+        if shuffle_numbers:
+            random.shuffle(players)
         player_numbers = {name: i+1 for i, name in enumerate(players)}
 
         rounds = int(request.form.get('rounds', 10))
+        shuffle_numbers = request.form.get('shuffleNumbers', 'no') == 'yes'
         schedule = generate_schedule(players, scores, rounds)
         pdf_path = create_pdf(schedule, player_numbers)
         return send_file(pdf_path, as_attachment=True)
