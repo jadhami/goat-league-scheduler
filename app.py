@@ -100,7 +100,7 @@ def create_pdf(schedule, player_numbers):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    shuffle_numbers = False  # prevent UnboundLocalError on GET
+    shuffle_numbers = False  # safe default for GET
     if request.method == 'POST':
         num_players = int(request.form['numPlayers'])
         use_weighted = request.form['useWeights'] == 'yes'
@@ -110,12 +110,13 @@ def index():
         df = df.sort_values(by="Weighted Score", ascending=False).head(num_players).reset_index(drop=True)
         players = df['Player'].tolist()
         scores = {name: float(df.loc[df['Player'] == name, 'Weighted Score']) if use_weighted else 0 for name in players}
-        if shuffle_numbers and players:
-            random.shuffle(players)
-        player_numbers = {name: i+1 for i, name in enumerate(players)}
+        if shuffle_numbers:
+            random.shuffle(original_players)
+        player_numbers = {name: i+1 for i, name in enumerate(original_players)}
 
         rounds = int(request.form.get('rounds', 10))
         shuffle_numbers = request.form.get('shuffleNumbers', 'no') == 'yes'
+        original_players = players.copy()  # preserve order for final numbering
         schedule = generate_schedule(players, scores, rounds)
         pdf_path = create_pdf(schedule, player_numbers)
         return send_file(pdf_path, as_attachment=True)
