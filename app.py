@@ -10,61 +10,52 @@ import os
 app = Flask(__name__)
 
 def generate_schedule(players, scores, rounds=10):
-played_with = defaultdict(set)
-played_against = defaultdict(lambda: defaultdict(int))
-schedule = []
-
-attempts = 0
-max_attempts = 20000  # increased from 5000 to allow more scheduling attempts
-
-while len(schedule) < rounds and attempts < max_attempts:
-attempts += 1
-random.shuffle(players)
-round_matches = []
-used = set()
-valid = True
-
-for i in range(0, len(players), 4):
-group = players[i:i + 4]
-best_match = None
-best_score = float('inf')
-
-for perm in permutations(group):
-team1, team2 = (perm[0], perm[1]), (perm[2], perm[3])
-if (team1[0] not in used and team1[1] not in used and
-team2[0] not in used and team2[1] not in used and
-team1[1] not in played_with[team1[0]] and
-team2[1] not in played_with[team2[0]] and
-all(played_against[p1][p2] < 3 for p1 in team1 for p2 in team2)):
-
-score = abs((scores[team1[0]] + scores[team1[1]]) / 2 -
-(scores[team2[0]] + scores[team2[1]]) / 2)
-if score < best_score:
-best_score = score
-best_match = (team1, team2)
-
-if best_match:
-round_matches.append(best_match)
-used.update(best_match[0] + best_match[1])
-else:
-valid = False
-break
-
-if valid and len(round_matches) == len(players) // 4:
-for team1, team2 in round_matches:
-played_with[team1[0]].add(team1[1])
-played_with[team1[1]].add(team1[0])
-played_with[team2[0]].add(team2[1])
-played_with[team2[1]].add(team2[0])
-for p1 in team1:
-for p2 in team2:
-played_against[p1][p2] += 1
-played_against[p2][p1] += 1
-schedule.append(round_matches)
-
-return schedule
-
-def create_pdf(schedule, player_numbers):
+    played_with = defaultdict(set)
+    played_against = defaultdict(lambda: defaultdict(int))
+    schedule = []
+        attempts = 0
+    max_attempts = 20000  # increased from 5000 to allow more scheduling attempts
+        while len(schedule) < rounds and attempts < max_attempts:
+    attempts += 1
+    random.shuffle(players)
+    round_matches = []
+    used = set()
+    valid = True
+        for i in range(0, len(players), 4):
+    group = players[i:i + 4]
+    best_match = None
+    best_score = float('inf')
+        for perm in permutations(group):
+    team1, team2 = (perm[0], perm[1]), (perm[2], perm[3])
+    if (team1[0] not in used and team1[1] not in used and
+    team2[0] not in used and team2[1] not in used and
+    team1[1] not in played_with[team1[0]] and
+    team2[1] not in played_with[team2[0]] and
+    all(played_against[p1][p2] < 3 for p1 in team1 for p2 in team2)):
+        score = abs((scores[team1[0]] + scores[team1[1]]) / 2 -
+    (scores[team2[0]] + scores[team2[1]]) / 2)
+    if score < best_score:
+    best_score = score
+    best_match = (team1, team2)
+        if best_match:
+    round_matches.append(best_match)
+    used.update(best_match[0] + best_match[1])
+    else:
+    valid = False
+    break
+        if valid and len(round_matches) == len(players) // 4:
+    for team1, team2 in round_matches:
+    played_with[team1[0]].add(team1[1])
+    played_with[team1[1]].add(team1[0])
+    played_with[team2[0]].add(team2[1])
+    played_with[team2[1]].add(team2[0])
+    for p1 in team1:
+    for p2 in team2:
+    played_against[p1][p2] += 1
+    played_against[p2][p1] += 1
+    schedule.append(round_matches)
+        return schedule
+    def create_pdf(schedule, player_numbers):
 reverse_map = {v: k for k, v in player_numbers.items()}
 tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
 pdf = FPDF()
