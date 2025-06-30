@@ -100,7 +100,7 @@ def create_pdf(schedule, player_numbers):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-shuffle_numbers = False  # prevent UnboundLocalError on GET
+    shuffle_numbers = False  # prevent UnboundLocalError on GET
     if request.method == 'POST':
         num_players = int(request.form['numPlayers'])
         use_weighted = request.form['useWeights'] == 'yes'
