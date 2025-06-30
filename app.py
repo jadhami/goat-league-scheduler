@@ -100,7 +100,8 @@ def create_pdf(schedule, player_numbers):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    shuffle_numbers = False  # safe default for GET
+    shuffle_numbers = False
+    original_players = []
     if request.method == 'POST':
         num_players = int(request.form['numPlayers'])
         use_weighted = request.form['useWeights'] == 'yes'
@@ -116,7 +117,7 @@ def index():
 
         rounds = int(request.form.get('rounds', 10))
         shuffle_numbers = request.form.get('shuffleNumbers', 'no') == 'yes'
-        original_players = players.copy()  # preserve order for final numbering
+        original_players = players.copy()
         schedule = generate_schedule(players, scores, rounds)
         pdf_path = create_pdf(schedule, player_numbers)
         return send_file(pdf_path, as_attachment=True)
